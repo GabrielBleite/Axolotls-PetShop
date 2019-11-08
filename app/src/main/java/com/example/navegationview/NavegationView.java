@@ -42,7 +42,7 @@ public class NavegationView extends AppCompatActivity {
                             R.id.frag_container, fragment).commit();
                     return true;
                 }else  if (menuItem.getItemId() == R.id.produto) {
-                    TelaProduto fragment = new TelaProduto();
+                    ListaProdutos fragment = new ListaProdutos();
                     getSupportFragmentManager().beginTransaction().replace(
                             R.id.frag_container, fragment).commit();
                     return true;

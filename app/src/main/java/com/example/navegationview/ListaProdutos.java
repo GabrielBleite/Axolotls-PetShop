@@ -3,13 +3,25 @@ package com.example.navegationview;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -18,20 +30,18 @@ import java.util.List;
 public class ListaProdutos extends Fragment {
 
 
-    public ListaProdutos() {
-        // Required empty public constructor
-    }
+    private ViewGroup mensagens;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_lista_produtos);
-        mensagens = findViewById(R.id.container);
+        View view = inflater.inflate(R.layout.fragment_lista_produtos, container, false);
+        mensagens = view.findViewById(R.id.container);
 
 
-        Retrofi retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://oficinacordova.azurewebsites.net")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -54,6 +64,26 @@ public class ListaProdutos extends Fragment {
                 t.printStackTrace();
             }
         });
+        return view;
+    }
+
+
+    private void addItem(String textoDoTitulo, String textoDaMensagem, int id) {
+        CardView cardView = (CardView) LayoutInflater.from(getActivity())
+                .inflate(R.layout.card, mensagens, false);
+
+        ImageView imagem = cardView.findViewById(R.id.imagem);
+        String url = "https://oficinacordova.azurewebsites.net/android/rest/produto/image/"+ id;
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+        imageLoader.displayImage(url, imagem);
+
+
+        TextView titulo = cardView.findViewById(R.id.titulo);
+        TextView menssagem = cardView.findViewById(R.id.mensagem);
+        titulo.setText(textoDoTitulo);
+        menssagem.setText(textoDaMensagem);
+        mensagens.addView(cardView);
     }
 
 }
